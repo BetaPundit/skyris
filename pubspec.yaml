@@ -1,0 +1,64 @@
+name: skyris
+description: "Real-time forecasts with stunning visuals and precision."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_bloc: ^9.0.0
+  path_provider: ^2.1.5
+  retrofit: ^4.4.2
+  dio: ^5.7.0
+  get_it: ^8.0.3
+  injectable: ^2.5.0
+  pretty_dio_logger: ^1.4.0
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+  intl: ^0.20.1
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
+  cached_network_image: ^3.4.1
+  internet_connection_checker: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  freezed: ^2.5.8
+  build_runner: ^2.4.14
+  json_serializable: ^6.9.3
+  injectable_generator: ^2.7.0
+  retrofit_generator: ^9.1.7
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Gilroy
+      fonts:
+        - asset: assets/fonts/Gilroy-UltraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Gilroy-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Gilroy-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Gilroy-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Gilroy-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Gilroy-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Gilroy-ExtraBold.ttf
+          weight: 800
