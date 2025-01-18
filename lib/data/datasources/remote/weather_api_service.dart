@@ -13,5 +13,6 @@ abstract class WeatherApiService {
     @Query('lat') int? lat,
     @Query('lon') int? lon,
     @Query('appid') String? appid,
+    @Query('units') String? units = 'metric',
   });
 }

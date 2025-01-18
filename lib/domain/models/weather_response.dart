@@ -13,6 +13,7 @@ class WeatherResponse with _$WeatherResponse {
     int? visibility,
     Wind? wind,
     Rain? rain,
+    Snow? snow,
     Clouds? clouds,
     int? dt,
     Sys? sys,
@@ -22,8 +23,27 @@ class WeatherResponse with _$WeatherResponse {
     int? cod,
   }) = _WeatherResponse;
 
-  factory WeatherResponse.fromJson(Map<String, dynamic> json) =>
-      _$WeatherResponseFromJson(json);
+  const WeatherResponse._();
+
+  String get backgroundImage {
+    if ((weather?.firstOrNull?.id ?? 0) < 300) {
+      return "assets/images/backgrounds/thunderstorm.png";
+    } else if ((weather?.firstOrNull?.id ?? 0) < 500) {
+      return "assets/images/backgrounds/drizzle.png";
+    } else if ((weather?.firstOrNull?.id ?? 0) < 600) {
+      return "assets/images/backgrounds/rain.png";
+    } else if ((weather?.firstOrNull?.id ?? 0) < 700) {
+      return "assets/images/backgrounds/snow.png";
+    } else if ((weather?.firstOrNull?.id ?? 0) < 800) {
+      return "assets/images/backgrounds/atmosphere.png";
+    } else if ((weather?.firstOrNull?.id ?? 0) == 800) {
+      return "assets/images/backgrounds/clear.png";
+    } else {
+      return "assets/images/backgrounds/clouds.png";
+    }
+  }
+
+  factory WeatherResponse.fromJson(Map<String, dynamic> json) => _$WeatherResponseFromJson(json);
 }
 
 @freezed
@@ -45,21 +65,20 @@ class Weather with _$Weather {
     String? icon,
   }) = _Weather;
 
-  factory Weather.fromJson(Map<String, dynamic> json) =>
-      _$WeatherFromJson(json);
+  factory Weather.fromJson(Map<String, dynamic> json) => _$WeatherFromJson(json);
 }
 
 @freezed
 class Main with _$Main {
   const factory Main({
     double? temp,
-    double? feelsLike,
-    double? tempMin,
-    double? tempMax,
+    @JsonKey(name: 'feels_like') double? feelsLike,
+    @JsonKey(name: 'temp_min') double? tempMin,
+    @JsonKey(name: 'temp_max') double? tempMax,
     int? pressure,
     int? humidity,
-    int? seaLevel,
-    int? grndLevel,
+    @JsonKey(name: 'sea_level') int? seaLevel,
+    @JsonKey(name: 'grnd_level') int? grndLevel,
   }) = _Main;
 
   factory Main.fromJson(Map<String, dynamic> json) => _$MainFromJson(json);
@@ -83,6 +102,15 @@ class Rain with _$Rain {
   }) = _Rain;
 
   factory Rain.fromJson(Map<String, dynamic> json) => _$RainFromJson(json);
+}
+
+@freezed
+class Snow with _$Snow {
+  factory Snow({
+    @JsonKey(name: '1h') double? oneHour,
+  }) = _Snow;
+
+  factory Snow.fromJson(Map<String, dynamic> json) => _$SnowFromJson(json);
 }
 
 @freezed

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:skyris/config/themes/app_colors.dart';
+import 'package:skyris/config/themes/extensions/app_color_scheme.dart';
 import 'package:skyris/config/themes/extensions/app_text_style.dart';
 
 abstract class AppTheme {
@@ -13,7 +14,7 @@ abstract class AppTheme {
       scaffoldBackgroundColor: AppColors.lightBackground,
       primaryColor: AppColors.lightSurface,
       splashColor: Colors.black12,
-      extensions: [AppTextStyle.light],
+      extensions: [AppTextStyle.light, AppColorScheme.light],
     );
   }
 
@@ -26,7 +27,7 @@ abstract class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       primaryColor: AppColors.primary,
       splashColor: Colors.white10,
-      extensions: [AppTextStyle.dark],
+      extensions: [AppTextStyle.dark, AppColorScheme.dark],
     );
   }
 }

@@ -26,6 +26,7 @@ dependencies:
   geocoding: ^3.0.0
   cached_network_image: ^3.4.1
   internet_connection_checker: ^3.0.1
+  hydrated_bloc: ^10.0.0
 
 dev_dependencies:
   flutter_test:
@@ -44,21 +45,16 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/backgrounds/
 
   fonts:
-    - family: Gilroy
+    - family: Lato
       fonts:
-        - asset: assets/fonts/Gilroy-UltraLight.ttf
-          weight: 200
-        - asset: assets/fonts/Gilroy-Light.ttf
+        - asset: assets/fonts/Lato-Light.ttf
           weight: 300
-        - asset: assets/fonts/Gilroy-Regular.ttf
+        - asset: assets/fonts/Lato-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Gilroy-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Gilroy-SemiBold.ttf
+        - asset: assets/fonts/Lato-Semibold.ttf
           weight: 600
-        - asset: assets/fonts/Gilroy-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Gilroy-ExtraBold.ttf
+        - asset: assets/fonts/Lato-Bold.ttf
           weight: 800

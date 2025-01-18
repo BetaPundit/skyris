@@ -19,6 +19,18 @@ class LocationState with _$LocationState {
   double? get latitude => position?.latitude;
 
   double? get longitude => position?.longitude;
+
+  Future<Placemark?> get locality async {
+    if (position == null) {
+      return null;
+    }
+    final placemarks = await placemarkFromCoordinates(
+      position!.latitude,
+      position!.longitude,
+    );
+    Placemark place = placemarks[0];
+    return place;
+  }
 }
 
 @lazySingleton
@@ -38,16 +50,6 @@ class LocationCubit extends Cubit<LocationState> {
     } catch (error) {
       emit(state.copyWith(status: NetworkStatus.failure));
     }
-  }
-
-  Future<Placemark?> getAddressFromLatLng(Position? position) async {
-    if (position == null) {
-      return null;
-    }
-    final placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    Placemark place = placemarks[0];
-    return place;
   }
 
   Future<Position> _getCurrentLocation() async {

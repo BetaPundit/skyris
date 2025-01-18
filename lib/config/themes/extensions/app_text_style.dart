@@ -78,25 +78,25 @@ class AppTextStyle extends ThemeExtension<AppTextStyle> {
       'headlineLarge: $headlineLarge, headlineMedium: $headlineMedium, headlineSmall: $headlineSmall, bodyLarge: $bodyLarge, bodyMedium: $bodyMedium, bodySmall: $bodySmall, labelLarge: $labelLarge, labelMedium: $labelMedium, labelSmall: $labelSmall, titleLarge: $titleLarge, titleMedium: $titleMedium, titleSmall: $titleSmall'
       ')';
 
-  static const _defaultFontFamily = 'Gilroy';
+  static const _defaultFontFamily = 'Lato';
 
   static const _headlineLarge = TextStyle(
     fontFamily: _defaultFontFamily,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     fontSize: 30.0,
     color: Colors.black,
   );
 
   static const _headlineMedium = TextStyle(
     fontFamily: _defaultFontFamily,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     fontSize: 28.0,
     color: Colors.black,
   );
 
   static const _headlineSmall = TextStyle(
     fontFamily: _defaultFontFamily,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     fontSize: 26.0,
     color: Colors.black,
   );
