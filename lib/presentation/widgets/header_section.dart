@@ -179,67 +179,70 @@ class _HeaderSectionState extends State<HeaderSection> {
   }
 
   Widget _buildContent(double offset, bool isLandscape) {
-    if (isLandscape) {
-      return Row(
-        children: [
-          Expanded(
-            child: Column(
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 800),
+      switchInCurve: Curves.fastOutSlowIn,
+      switchOutCurve: Curves.fastEaseInToSlowEaseOut,
+      child: isLandscape
+          ? Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildDateText(offset),
+                      Text(cityName.toUpperCase(), style: textStyle.titleMedium),
+                      _buildFeelsLike(offset),
+                      SizedBox(height: 36 * pow(offset, 4) as double),
+                      if (widget.city != null) _buildFavoriteButton(offset),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildTemperature(offset),
+                      Text(
+                        (widget.weatherResponse.weather?.firstOrNull?.description ?? '--').titleCase,
+                        style: textStyle.bodyMedium,
+                      ),
+                      _buildHighLow(offset),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildDateText(offset),
-                Text(cityName.toUpperCase(), style: textStyle.titleMedium),
-                _buildFeelsLike(offset),
-                SizedBox(height: 36 * pow(offset, 4) as double),
-                if (widget.city != null) _buildFavoriteButton(offset),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _buildTemperature(offset),
-                Text(
-                  (widget.weatherResponse.weather?.firstOrNull?.description ?? '--').titleCase,
-                  style: textStyle.bodyMedium,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(cityName.toUpperCase(), style: textStyle.titleMedium),
+                    if (widget.city != null) _buildFavoriteButton(offset),
+                  ],
                 ),
-                _buildHighLow(offset),
+                _buildFeelsLike(offset),
+                Spacer(),
+                _buildTemperature(offset),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    (widget.weatherResponse.weather?.firstOrNull?.description ?? '--').titleCase,
+                    style: textStyle.bodyMedium,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: _buildHighLow(offset),
+                ),
               ],
             ),
-          ),
-        ],
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildDateText(offset),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(cityName.toUpperCase(), style: textStyle.titleMedium),
-            if (widget.city != null) _buildFavoriteButton(offset),
-          ],
-        ),
-        _buildFeelsLike(offset),
-        Spacer(),
-        _buildTemperature(offset),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            (widget.weatherResponse.weather?.firstOrNull?.description ?? '--').titleCase,
-            style: textStyle.bodyMedium,
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: _buildHighLow(offset),
-        ),
-      ],
     );
   }
 
