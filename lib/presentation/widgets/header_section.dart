@@ -141,7 +141,7 @@ class _HeaderSectionState extends State<HeaderSection> {
 
   Widget _buildTemperature(double offset) {
     return Row(
-      spacing: 8,
+      spacing: 5,
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -149,12 +149,14 @@ class _HeaderSectionState extends State<HeaderSection> {
           imageUrl: "${Constants.iconBaseUrl}/${widget.weatherResponse.weather?.firstOrNull?.icon}@2x.png",
           height: (52 * offset).clamp(28, 52),
         ),
-        Text(
-          '${(widget.weatherResponse.main?.temp)?.round() ?? '--'}°C',
-          style: textStyle.headlineLarge.copyWith(
-            fontSize: (60 * offset).clamp(24, 60),
-            fontWeight: FontWeight.w900,
-            height: 1.2,
+        FittedBox(
+          child: Text(
+            '${(widget.weatherResponse.main?.temp)?.round() ?? '--'}°C',
+            style: textStyle.headlineLarge.copyWith(
+              fontSize: (60 * offset).clamp(24, 60),
+              fontWeight: FontWeight.w900,
+              height: 1.2,
+            ),
           ),
         ),
       ],
