@@ -21,6 +21,7 @@ class DataCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.themeData.extension<AppColorScheme>()!;
     final textStyle = context.themeData.extension<AppTextStyle>()!;
+    final isLandscape = MediaQuery.orientationOf(context) == Orientation.landscape;
 
     return Container(
       decoration: BoxDecoration(
@@ -37,23 +38,54 @@ class DataCard extends StatelessWidget {
       ),
       child: customChild ??
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 26),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 6,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                icon,
-                Text(
-                  heading,
-                  style: textStyle.bodyMedium,
-                ),
-                Text(
-                  content,
-                  style: textStyle.labelLarge.copyWith(height: 1),
-                ),
-              ],
+            padding: EdgeInsets.symmetric(
+              horizontal: isLandscape ? 10 : 14,
+              vertical: isLandscape ? 16 : 26,
             ),
+            child: isLandscape
+                ? Row(
+                    children: [
+                      icon,
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 4,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              heading,
+                              style: textStyle.bodyMedium.copyWith(fontSize: 13),
+                            ),
+                            Text(
+                              content,
+                              style: textStyle.labelLarge.copyWith(
+                                height: 1,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 6,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      icon,
+                      Text(
+                        heading,
+                        style: textStyle.bodyMedium,
+                      ),
+                      Text(
+                        content,
+                        style: textStyle.labelLarge.copyWith(height: 1),
+                      ),
+                    ],
+                  ),
           ),
     );
   }

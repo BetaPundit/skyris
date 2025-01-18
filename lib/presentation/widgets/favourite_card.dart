@@ -9,6 +9,7 @@ import 'package:skyris/domain/models/weather_location.dart';
 import 'package:skyris/presentation/cubit/favourites_cubit.dart';
 import 'package:skyris/presentation/cubit/weather_cubit.dart';
 import 'package:skyris/presentation/screens/home_screen.dart';
+import 'package:skyris/utils/constants/enums.dart';
 import 'package:skyris/utils/extensions/app_theme_extension.dart';
 
 class FavouriteCard extends StatelessWidget {
@@ -97,11 +98,25 @@ class FavouriteCard extends StatelessWidget {
                 return Scaffold(
                   body: BlocProvider(
                     create: (context) => locator<WeatherCubit>(),
-                    child: HomeScreen(
-                      city: CityResponse(
-                        name: location.cityName,
-                        latitude: location.latitude,
-                        longitude: location.longitude,
+                    child: BlocListener<WeatherCubit, WeatherState>(
+                      listener: (context, state) {
+                        if (state.status.isSuccess) {
+                          context.read<FavouritesCubit>().updateWeatherData(
+                                CityResponse(
+                                  name: location.cityName,
+                                  latitude: location.latitude,
+                                  longitude: location.longitude,
+                                ),
+                                state.weatherData!,
+                              );
+                        }
+                      },
+                      child: HomeScreen(
+                        city: CityResponse(
+                          name: location.cityName,
+                          latitude: location.latitude,
+                          longitude: location.longitude,
+                        ),
                       ),
                     ),
                   ),

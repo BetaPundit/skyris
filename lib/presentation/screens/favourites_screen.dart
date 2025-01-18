@@ -41,6 +41,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
       ),
 
       body: Column(

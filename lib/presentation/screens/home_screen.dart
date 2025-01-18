@@ -46,138 +46,143 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WeatherCubit, WeatherState>(
-      builder: (context, state) {
-        return AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
-          child: state.isLoading
-              ? Center(child: _buildLoader())
-              : state.hasError
-                  ? Center(
-                      child: ErrorCard(
-                        errorMessage: state.error ?? '',
-                        onRetry: () {
-                          context.read<WeatherCubit>().fetchWeather(
-                                latitude: latitude,
-                                longitude: longitude,
-                              );
-                        },
-                      ),
-                    )
-                  : CustomScrollView(
-                      slivers: [
-                        // Header Section
-                        HeaderSection(
-                          weatherResponse: state.weatherData!,
-                          city: widget.city,
-                        ),
-
-                        SliverPadding(
-                          padding: const EdgeInsets.all(10),
-                          sliver: SliverGrid(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 10,
-                              crossAxisSpacing: 10,
-                              childAspectRatio: 1.45,
-                            ),
-                            delegate: SliverChildListDelegate(
-                              [
-                                // Wind Data
-                                if (state.weatherData?.wind != null)
-                                  DataCard(
-                                    icon: Icon(
-                                      CupertinoIcons.wind,
-                                      color: colorScheme.text,
-                                    ),
-                                    heading: 'Wind',
-                                    content:
-                                        '${((state.weatherData?.wind!.speed ?? 0) * 18 / 5).toStringAsFixed(2)} km/h',
-                                  ),
-
-                                // Sunrise/sunset Data
-                                if (state.weatherData?.sys != null)
-                                  DataCard(
-                                    icon: Icon(
-                                      CupertinoIcons.sunrise,
-                                      color: colorScheme.text,
-                                    ),
-                                    heading:
-                                        'Sunrise: ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(state.weatherData?.sys!.sunrise ?? 0))}',
-                                    content:
-                                        'Sunset: ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(state.weatherData?.sys!.sunset ?? 0))}',
-                                  ),
-
-                                // Pressure Data
-                                if (state.weatherData?.main?.pressure != null)
-                                  DataCard(
-                                    icon: Icon(
-                                      CupertinoIcons.thermometer,
-                                      color: colorScheme.text,
-                                    ),
-                                    heading: 'Pressure',
-                                    content: '${(state.weatherData?.main!.pressure!)} hPa',
-                                  ),
-
-                                // Humidity Data
-                                if (state.weatherData?.main?.humidity != null)
-                                  DataCard(
-                                    icon: Icon(
-                                      CupertinoIcons.drop,
-                                      color: colorScheme.text,
-                                    ),
-                                    heading: 'Humidity',
-                                    content: '${(state.weatherData?.main!.humidity!)}%',
-                                  ),
-
-                                // visibility Data
-                                if (state.weatherData?.visibility != null)
-                                  DataCard(
-                                    icon: Icon(
-                                      CupertinoIcons.eye,
-                                      color: colorScheme.text,
-                                    ),
-                                    heading: 'visibility',
-                                    content: '${((state.weatherData?.visibility ?? 0) / 1000).toStringAsFixed(2)} km',
-                                  ),
-
-                                // Cloudiness Data
-                                DataCard(
-                                  icon: Icon(
-                                    CupertinoIcons.cloud,
-                                    color: colorScheme.text,
-                                  ),
-                                  heading: 'Cloudiness',
-                                  content: '${(state.weatherData?.clouds?.all ?? 0)}%',
-                                ),
-
-                                // Rain Data
-                                DataCard(
-                                  icon: Icon(
-                                    CupertinoIcons.cloud_rain,
-                                    color: colorScheme.text,
-                                  ),
-                                  heading: 'Precipitation',
-                                  content: '${(state.weatherData?.rain?.oneHour ?? 0)} mm/h',
-                                ),
-
-                                // Rain Data
-                                DataCard(
-                                  icon: Icon(
-                                    CupertinoIcons.cloud_snow,
-                                    color: colorScheme.text,
-                                  ),
-                                  heading: 'Snow',
-                                  content: '${(state.weatherData?.snow?.oneHour ?? 0)} mm/h',
-                                ),
-
-                                const SizedBox(height: 100)
-                              ],
-                            ),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return BlocBuilder<WeatherCubit, WeatherState>(
+          builder: (context, state) {
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 500),
+              child: state.isLoading
+                  ? Center(child: _buildLoader())
+                  : state.hasError
+                      ? Center(
+                          child: ErrorCard(
+                            errorMessage: state.error ?? '',
+                            onRetry: () {
+                              context.read<WeatherCubit>().fetchWeather(
+                                    latitude: latitude,
+                                    longitude: longitude,
+                                  );
+                            },
                           ),
+                        )
+                      : CustomScrollView(
+                          slivers: [
+                            // Header Section
+                            HeaderSection(
+                              weatherResponse: state.weatherData!,
+                              city: widget.city,
+                            ),
+
+                            SliverPadding(
+                              padding: const EdgeInsets.all(10),
+                              sliver: SliverGrid(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: orientation == Orientation.landscape ? 4 : 2,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  childAspectRatio: orientation == Orientation.landscape ? 1.8 : 1.45,
+                                ),
+                                delegate: SliverChildListDelegate(
+                                  [
+                                    // Wind Data
+                                    if (state.weatherData?.wind != null)
+                                      DataCard(
+                                        icon: Icon(
+                                          CupertinoIcons.wind,
+                                          color: colorScheme.text,
+                                        ),
+                                        heading: 'Wind',
+                                        content:
+                                            '${((state.weatherData?.wind!.speed ?? 0) * 18 / 5).toStringAsFixed(2)} km/h',
+                                      ),
+
+                                    // Sunrise/sunset Data
+                                    if (state.weatherData?.sys != null)
+                                      DataCard(
+                                        icon: Icon(
+                                          CupertinoIcons.sunrise,
+                                          color: colorScheme.text,
+                                        ),
+                                        heading:
+                                            'Sunrise: ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(state.weatherData?.sys!.sunrise ?? 0))}',
+                                        content:
+                                            'Sunset: ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(state.weatherData?.sys!.sunset ?? 0))}',
+                                      ),
+
+                                    // Pressure Data
+                                    if (state.weatherData?.main?.pressure != null)
+                                      DataCard(
+                                        icon: Icon(
+                                          CupertinoIcons.thermometer,
+                                          color: colorScheme.text,
+                                        ),
+                                        heading: 'Pressure',
+                                        content: '${(state.weatherData?.main!.pressure!)} hPa',
+                                      ),
+
+                                    // Humidity Data
+                                    if (state.weatherData?.main?.humidity != null)
+                                      DataCard(
+                                        icon: Icon(
+                                          CupertinoIcons.drop,
+                                          color: colorScheme.text,
+                                        ),
+                                        heading: 'Humidity',
+                                        content: '${(state.weatherData?.main!.humidity!)}%',
+                                      ),
+
+                                    // visibility Data
+                                    if (state.weatherData?.visibility != null)
+                                      DataCard(
+                                        icon: Icon(
+                                          CupertinoIcons.eye,
+                                          color: colorScheme.text,
+                                        ),
+                                        heading: 'visibility',
+                                        content:
+                                            '${((state.weatherData?.visibility ?? 0) / 1000).toStringAsFixed(2)} km',
+                                      ),
+
+                                    // Cloudiness Data
+                                    DataCard(
+                                      icon: Icon(
+                                        CupertinoIcons.cloud,
+                                        color: colorScheme.text,
+                                      ),
+                                      heading: 'Cloudiness',
+                                      content: '${(state.weatherData?.clouds?.all ?? 0)}%',
+                                    ),
+
+                                    // Rain Data
+                                    DataCard(
+                                      icon: Icon(
+                                        CupertinoIcons.cloud_rain,
+                                        color: colorScheme.text,
+                                      ),
+                                      heading: 'Precipitation',
+                                      content: '${(state.weatherData?.rain?.oneHour ?? 0)} mm/h',
+                                    ),
+
+                                    // Rain Data
+                                    DataCard(
+                                      icon: Icon(
+                                        CupertinoIcons.cloud_snow,
+                                        color: colorScheme.text,
+                                      ),
+                                      heading: 'Snow',
+                                      content: '${(state.weatherData?.snow?.oneHour ?? 0)} mm/h',
+                                    ),
+
+                                    const SizedBox(height: 100)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+            );
+          },
         );
       },
     );

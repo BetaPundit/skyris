@@ -43,45 +43,75 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colorScheme.background,
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final isLandscape = orientation == Orientation.landscape;
 
-      // Body
-      body: _tabOptions[_selectedIndex],
+        return Scaffold(
+          backgroundColor: colorScheme.background,
+          body: isLandscape
+              ? Row(
+                  children: [
+                    NavigationRail(
+                      backgroundColor: colorScheme.surface,
+                      selectedIndex: _selectedIndex,
+                      onDestinationSelected: _onNavItemTap,
+                      labelType: NavigationRailLabelType.none,
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(CupertinoIcons.compass),
+                          selectedIcon: Icon(CupertinoIcons.compass_fill),
+                          label: Text(''),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(CupertinoIcons.square_favorites),
+                          selectedIcon: Icon(CupertinoIcons.square_favorites_fill),
+                          label: Text(''),
+                        ),
+                      ],
+                    ),
+                    Expanded(child: _tabOptions[_selectedIndex]),
+                  ],
+                )
+              : _tabOptions[_selectedIndex],
 
-      // Bottom Navbar
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
-        child: BottomNavigationBar(
-          backgroundColor: colorScheme.surface,
-          elevation: 0,
-          iconSize: 26,
-          selectedLabelStyle: textStyle.bodySmall,
-          unselectedLabelStyle: textStyle.bodySmall,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          enableFeedback: true,
-          items: <BottomNavigationBarItem>[
-            // Home Tab
-            const BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.compass),
-              activeIcon: Icon(CupertinoIcons.compass_fill),
-              label: '',
-            ),
+          // Bottom Navbar - Only show in portrait mode
+          bottomNavigationBar: !isLandscape
+              ? ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
+                  child: BottomNavigationBar(
+                    backgroundColor: colorScheme.surface,
+                    elevation: 0,
+                    iconSize: 26,
+                    selectedLabelStyle: textStyle.bodySmall,
+                    unselectedLabelStyle: textStyle.bodySmall,
+                    showSelectedLabels: false,
+                    showUnselectedLabels: false,
+                    enableFeedback: true,
+                    items: const <BottomNavigationBarItem>[
+                      // Home Tab
+                      BottomNavigationBarItem(
+                        icon: Icon(CupertinoIcons.compass),
+                        activeIcon: Icon(CupertinoIcons.compass_fill),
+                        label: '',
+                      ),
 
-            // Favourites Tab
-            const BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.square_favorites),
-              activeIcon: Icon(CupertinoIcons.square_favorites_fill),
-              label: '',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: colorScheme.text,
-          unselectedItemColor: Colors.grey,
-          onTap: _onNavItemTap,
-        ),
-      ),
+                      // Favourites Tab
+                      BottomNavigationBarItem(
+                        icon: Icon(CupertinoIcons.square_favorites),
+                        activeIcon: Icon(CupertinoIcons.square_favorites_fill),
+                        label: '',
+                      ),
+                    ],
+                    currentIndex: _selectedIndex,
+                    selectedItemColor: colorScheme.text,
+                    unselectedItemColor: Colors.grey,
+                    onTap: _onNavItemTap,
+                  ),
+                )
+              : null,
+        );
+      },
     );
   }
 

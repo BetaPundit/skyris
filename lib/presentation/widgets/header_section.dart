@@ -60,6 +60,187 @@ class _HeaderSectionState extends State<HeaderSection> {
     super.initState();
   }
 
+  Widget _buildDateText(double offset) {
+    return Opacity(
+      opacity: pow(offset, 10) as double,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: RichText(
+          textScaler: TextScaler.linear(pow(offset, 2) as double),
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: DateFormat('DD MMM,').format(DateTime.now()),
+                style: textStyle.labelLarge,
+              ),
+              TextSpan(
+                text: DateFormat(' EEEE').format(DateTime.now()),
+                style: textStyle.bodyLarge,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeelsLike(double offset) {
+    return Opacity(
+      opacity: pow(offset, 10) as double,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Feels like ${(widget.weatherResponse.main?.feelsLike)?.round() ?? '--'}°C',
+          style: textStyle.bodyMedium,
+          textScaler: TextScaler.linear(pow(offset, 2) as double),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFavoriteButton(double offset) {
+    return BlocBuilder<FavouritesCubit, FavouritesState>(
+      builder: (context, state) {
+        final isFavourite = context.read<FavouritesCubit>().isFavourite(
+              widget.city!,
+              widget.weatherResponse,
+            );
+
+        return SizedBox(
+          height: 26 * pow(offset, 4) as double,
+          child: IconButton(
+            iconSize: 26 * pow(offset, 4) as double,
+            icon: Icon(
+              isFavourite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+              color: colorScheme.text.withValues(alpha: pow(offset, 10) as double),
+            ),
+            visualDensity: VisualDensity(vertical: -4),
+            onPressed: () {
+              if (isFavourite) {
+                context.read<FavouritesCubit>().removeFromFavourites(widget.city!);
+              } else {
+                context.read<FavouritesCubit>().addToFavourites(widget.city!, widget.weatherResponse);
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isFavourite
+                        ? "${widget.city!.name} removed from favourites"
+                        : "${widget.city!.name} added to favourites",
+                  ),
+                  duration: Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTemperature(double offset) {
+    return Row(
+      spacing: 8,
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        CachedNetworkImage(
+          imageUrl: "${Constants.iconBaseUrl}/${widget.weatherResponse.weather?.firstOrNull?.icon}@2x.png",
+          height: (52 * offset).clamp(28, 52),
+        ),
+        Text(
+          '${(widget.weatherResponse.main?.temp)?.round() ?? '--'}°C',
+          style: textStyle.headlineLarge.copyWith(
+            fontSize: (60 * offset).clamp(24, 60),
+            fontWeight: FontWeight.w900,
+            height: 1.2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHighLow(double offset) {
+    return Opacity(
+      opacity: pow(offset, 10) as double,
+      child: Text(
+        "H:${((widget.weatherResponse.main?.tempMax)?.toStringAsFixed(0) ?? '--')}°  L:${((widget.weatherResponse.main?.tempMin)?.toStringAsFixed(0) ?? '--')}°",
+        style: textStyle.labelLarge.copyWith(
+          height: 1.5,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.2,
+        ),
+        textScaler: TextScaler.linear(pow(offset, 2) as double),
+      ),
+    );
+  }
+
+  Widget _buildContent(double offset, bool isLandscape) {
+    if (isLandscape) {
+      return Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildDateText(offset),
+                Text(cityName.toUpperCase(), style: textStyle.titleMedium),
+                _buildFeelsLike(offset),
+                SizedBox(height: 36 * pow(offset, 4) as double),
+                if (widget.city != null) _buildFavoriteButton(offset),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _buildTemperature(offset),
+                Text(
+                  (widget.weatherResponse.weather?.firstOrNull?.description ?? '--').titleCase,
+                  style: textStyle.bodyMedium,
+                ),
+                _buildHighLow(offset),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildDateText(offset),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(cityName.toUpperCase(), style: textStyle.titleMedium),
+            if (widget.city != null) _buildFavoriteButton(offset),
+          ],
+        ),
+        _buildFeelsLike(offset),
+        Spacer(),
+        _buildTemperature(offset),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            (widget.weatherResponse.weather?.firstOrNull?.description ?? '--').titleCase,
+            style: textStyle.bodyMedium,
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: _buildHighLow(offset),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -78,184 +259,52 @@ class _HeaderSectionState extends State<HeaderSection> {
             final double offset =
                 maxHeight - minHeight == 0 ? 0 : ((height - minHeight) / (maxHeight - minHeight)).clamp(0, 1);
 
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  margin: EdgeInsets.all(10),
-                  foregroundDecoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment(0.0, 0.6),
-                      end: Alignment.center,
-                      colors: <Color>[
-                        Color(0x60000000),
-                        Color(0x00000000),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(cornerRadius),
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.background,
-                    borderRadius: BorderRadius.circular(cornerRadius),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Image.asset(
-                    widget.weatherResponse.backgroundImage,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      30,
-                      (20 * offset).clamp(MediaQuery.viewPaddingOf(context).top == 0 ? 20 : 0, 20),
-                      30,
-                      (40 * offset).clamp(26, 40),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Date
-                        Opacity(
-                          opacity: pow(offset, 10) as double,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: RichText(
-                              textScaler: TextScaler.linear(pow(offset, 2) as double),
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: DateFormat('DD MMM,').format(DateTime.now()),
-                                    style: textStyle.labelLarge,
-                                  ),
-                                  TextSpan(
-                                    text: DateFormat(' EEEE').format(DateTime.now()),
-                                    style: textStyle.bodyLarge,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+            return OrientationBuilder(
+              builder: (context, orientation) {
+                final isLandscape = orientation == Orientation.landscape;
 
-                        // City Name
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              cityName.toUpperCase(),
-                              style: textStyle.titleMedium,
-                            ),
-                            if (widget.city != null)
-                              BlocBuilder<FavouritesCubit, FavouritesState>(builder: (context, state) {
-                                final isFavourite = context.read<FavouritesCubit>().isFavourite(
-                                      widget.city!,
-                                      widget.weatherResponse,
-                                    );
-
-                                return SizedBox(
-                                  height: 26 * pow(offset, 4) as double,
-                                  child: IconButton(
-                                    iconSize: 26 * pow(offset, 4) as double,
-                                    icon: Icon(
-                                      isFavourite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                                      color: colorScheme.text.withValues(alpha: pow(offset, 10) as double),
-                                    ),
-                                    visualDensity: VisualDensity(vertical: -4),
-                                    onPressed: () {
-                                      if (isFavourite) {
-                                        context.read<FavouritesCubit>().removeFromFavourites(widget.city!);
-                                      } else {
-                                        context
-                                            .read<FavouritesCubit>()
-                                            .addToFavourites(widget.city!, widget.weatherResponse);
-                                      }
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            isFavourite
-                                                ? "${widget.city!.name} removed from favourites"
-                                                : "${widget.city!.name} added to favourites",
-                                          ),
-                                          duration: Duration(seconds: 2),
-                                          behavior: SnackBarBehavior.floating,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              })
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      foregroundDecoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment(0.0, 0.6),
+                          end: Alignment.center,
+                          colors: <Color>[
+                            Color(0x60000000),
+                            Color(0x00000000),
                           ],
                         ),
-
-                        // Feels Like
-                        Opacity(
-                          opacity: pow(offset, 10) as double,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Feels like ${(widget.weatherResponse.main?.feelsLike)?.round() ?? '--'}°C',
-                              style: textStyle.bodyMedium,
-                              textScaler: TextScaler.linear(pow(offset, 2) as double),
-                            ),
-                          ),
-                        ),
-
-                        Spacer(),
-
-                        // Temperature
-                        Row(
-                          spacing: 8,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl:
-                                  "${Constants.iconBaseUrl}/${widget.weatherResponse.weather?.firstOrNull?.icon}@2x.png",
-                              height: (52 * offset).clamp(28, 52),
-                            ),
-                            Text(
-                              '${(widget.weatherResponse.main?.temp)?.round() ?? '--'}°C',
-                              style: textStyle.headlineLarge.copyWith(
-                                fontSize: (60 * offset).clamp(24, 60),
-                                fontWeight: FontWeight.w900,
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Description
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            (widget.weatherResponse.weather?.firstOrNull?.description ?? '--').titleCase,
-                            style: textStyle.bodyMedium,
-                          ),
-                        ),
-
-                        // High/Low
-                        Opacity(
-                          opacity: pow(offset, 10) as double,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              "H:${((widget.weatherResponse.main?.tempMax)?.toStringAsFixed(0) ?? '--')}°  L:${((widget.weatherResponse.main?.tempMin)?.toStringAsFixed(0) ?? '--')}°",
-                              style: textStyle.labelLarge.copyWith(
-                                height: 1.5,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 1.2,
-                              ),
-                              textScaler: TextScaler.linear(pow(offset, 2) as double),
-                            ),
-                          ),
-                        ),
-                      ],
+                        borderRadius: BorderRadius.circular(cornerRadius),
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorScheme.background,
+                        borderRadius: BorderRadius.circular(cornerRadius),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Image.asset(
+                        widget.weatherResponse.backgroundImage,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ),
-              ],
+                    SafeArea(
+                      left: false,
+                      // right: false,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          30,
+                          (30 * offset).clamp(MediaQuery.viewPaddingOf(context).top == 0 ? 20 : 0, 30),
+                          30,
+                          ((isLandscape ? 20 : 40) * offset).clamp(isLandscape ? 20 : 26, isLandscape ? 20 : 40),
+                        ),
+                        child: _buildContent(offset, isLandscape),
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
         ),
