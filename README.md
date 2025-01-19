@@ -8,6 +8,17 @@ This project is Flutter application that displays current weather information, h
 
 > **Note:** This project uses **Flutter version 3.27.2**. For managing multiple Flutter versions, consider using **FVM** (Flutter Version Management).
 
+## APIs Used
+
+This app uses the following APIs:
+
+- **OpenWeather API**: Used for fetching current weather data and forecasts
+  - Requires an API key from [OpenWeather](https://openweathermap.org/api)
+  - Free tier allows up to 60 calls/minute
+- **GeoDB Cities API**: Used for city search functionality
+  - Requires an API key from [APINinjas](https://www.api-ninjas.com/api/city)
+  - Free tier allows up to 10000 calls/month
+
 ## Getting Started
 
 ### Prerequisites
