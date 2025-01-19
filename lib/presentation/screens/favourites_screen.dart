@@ -130,7 +130,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
                   itemCount: state.favourites.length,
                   itemBuilder: (context, index) {
                     final location = state.favourites[index];

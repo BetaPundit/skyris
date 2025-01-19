@@ -38,8 +38,7 @@ class _HeaderSectionState extends State<HeaderSection> {
   late double? longitude;
   late final double minHeight = 120;
   late final double maxHeight = MediaQuery.of(context).size.height * .5;
-  late final cornerRadius =
-      MediaQuery.viewPaddingOf(context).top == 0 ? 42.0 : MediaQuery.viewPaddingOf(context).top - 10;
+  late final cornerRadius = MediaQuery.viewPaddingOf(context).top == 0 ? 42.0 : MediaQuery.viewPaddingOf(context).top;
   String cityName = '';
 
   @override

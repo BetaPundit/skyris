@@ -48,6 +48,7 @@ class _BaseScreenState extends State<BaseScreen> {
         final isLandscape = orientation == Orientation.landscape;
 
         return Scaffold(
+          extendBody: true,
           backgroundColor: colorScheme.background,
           body: isLandscape
               ? Row(
