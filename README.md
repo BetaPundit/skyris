@@ -1,5 +1,7 @@
 # Skyris
 
+<img src="assets/images/skyris-logo.png" height="150" alt="Skyris Logo"/>
+
 Real-time forecasts with stunning visuals and precision.
 
 ## Project Overview
@@ -53,7 +55,3 @@ This app uses the following APIs:
 ### Running the App
 
 Run the app on an emulator or connected device:
-
-```sh
-flutter run
-```
