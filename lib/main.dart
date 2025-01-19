@@ -11,9 +11,9 @@ import 'package:skyris/presentation/cubit/location_cubit.dart';
 import 'package:skyris/presentation/screens/splash_screen.dart';
 import 'package:skyris/utils/constants/constants.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
+  await configureDependencies();
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory:
         kIsWeb ? HydratedStorageDirectory.web : HydratedStorageDirectory((await getTemporaryDirectory()).path),

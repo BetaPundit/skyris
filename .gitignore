@@ -51,3 +51,6 @@ app.*.map.json
 *.config.dart
 pubspec.lock
 cusmat.keystore
+
+# Environment variables
+.env

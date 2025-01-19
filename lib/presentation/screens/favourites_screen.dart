@@ -39,6 +39,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
           'Skiris - Weather',
           style: textStyle.headlineLarge,
         ),
+        centerTitle: false,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         scrolledUnderElevation: 0,

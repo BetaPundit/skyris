@@ -15,9 +15,13 @@ This app uses the following APIs:
 - **OpenWeather API**: Used for fetching current weather data and forecasts
   - Requires an API key from [OpenWeather](https://openweathermap.org/api)
   - Free tier allows up to 60 calls/minute
-- **GeoDB Cities API**: Used for city search functionality
+  - Add your API key to `.env` file as `WEATHER_API_KEY=your_key_here`
+- **API Ninjas City API**: Used for city search functionality
   - Requires an API key from [APINinjas](https://www.api-ninjas.com/api/city)
   - Free tier allows up to 10000 calls/month
+  - Add your API key to `.env` file as `CITY_API_KEY=your_key_here`
+
+> **Note:** Create a `.env` file in the root directory and add your API keys. See `.env.example` for the required format.
 
 ## Getting Started
 

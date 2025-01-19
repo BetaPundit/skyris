@@ -27,7 +27,7 @@ dependencies:
   cached_network_image: ^3.4.1
   internet_connection_checker: ^3.0.1
   hydrated_bloc: ^10.0.0
-
+  flutter_dotenv: ^5.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -46,6 +46,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/backgrounds/
+    - .env
 
   fonts:
     - family: Lato

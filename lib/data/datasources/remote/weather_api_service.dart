@@ -6,13 +6,15 @@ part 'weather_api_service.g.dart';
 
 @RestApi(parser: Parser.JsonSerializable)
 abstract class WeatherApiService {
-  factory WeatherApiService(Dio dio) = _WeatherApiService;
+  factory WeatherApiService(Dio dio, String apiKey) {
+    dio.options.queryParameters = {'appid': apiKey};
+    return _WeatherApiService(dio);
+  }
 
   @GET("/weather")
   Future<HttpResponse<WeatherResponse>> fetchCurrentWeather({
     @Query('lat') int? lat,
     @Query('lon') int? lon,
-    @Query('appid') String? appid,
     @Query('units') String? units = 'metric',
   });
 }
