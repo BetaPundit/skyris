@@ -7,5 +7,6 @@
       120
     ]
   },
-  "workbench.colorTheme": "Dracula Pro (Van Helsing)"
+  "workbench.colorTheme": "Dracula Pro (Van Helsing)",
+  "dart.flutterSdkPath": ".fvm/versions/3.27.3"
 }

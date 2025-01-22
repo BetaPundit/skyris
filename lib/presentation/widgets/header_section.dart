@@ -148,13 +148,17 @@ class _HeaderSectionState extends State<HeaderSection> {
           imageUrl: "${Constants.iconBaseUrl}/${widget.weatherResponse.weather?.firstOrNull?.icon}@2x.png",
           height: (52 * offset).clamp(28, 52),
         ),
-        FittedBox(
-          child: Text(
-            '${(widget.weatherResponse.main?.temp)?.round() ?? '--'}°C',
-            style: textStyle.headlineLarge.copyWith(
-              fontSize: (60 * offset).clamp(24, 60),
-              fontWeight: FontWeight.w900,
-              height: 1.2,
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${(widget.weatherResponse.main?.temp)?.round() ?? '--'}°C',
+              style: textStyle.headlineLarge.copyWith(
+                fontSize: (60 * offset).clamp(24, 60),
+                fontWeight: FontWeight.w900,
+                height: 1.2,
+              ),
+              textAlign: TextAlign.end,
             ),
           ),
         ),
